@@ -6,7 +6,7 @@
 #define FRAME_LIMIT_FPS 60
 #define FRAME_LIMIT_MS (1000 / FRAME_LIMIT_FPS)
 #define FLOOR_BRIGHTNESS_MIN 15
-#define FLOOR_BRIGHTNESS_MAX 200
+#define FLOOR_BRIGHTNESS_MAX 120
 
 typedef struct {
 	Uint8 r;

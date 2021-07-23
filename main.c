@@ -225,6 +225,7 @@ int main(int argc, char *argv[])
 			int ceiling = (double) (screen.height / 2.0) - screen.height / ((double) distanceToWall);
 			int floor = screen.height - ceiling;
 
+			// Wall color, shaded respective to distance 
 			uint8_t c = 255 - (distanceToWall * 255 / maxRenderDist) + 15;
 			Color shade = {c, c, c, 255};
 			
@@ -234,10 +235,11 @@ int main(int argc, char *argv[])
 				if (y <= ceiling) 
 					draw_pixel(&screen, x, y, (Color) {0, 0, 0, 0});
 				else if (y > ceiling && y <= floor) 
-					draw_pixel(&screen, x, y, shade);
+					draw_pixel(&screen, x, y, shade); // wall
 				else {
 					// Floor
-					c = (y * 255 / (screen.height / 2.0));
+					int half_screen_height = (screen.height-1) / 2;
+					c = (((FLOOR_BRIGHTNESS_MAX - FLOOR_BRIGHTNESS_MIN) * (y - half_screen_height)) / half_screen_height) + FLOOR_BRIGHTNESS_MIN;
 					shade = (Color) {0, c, 0, 255};
 					draw_pixel(&screen, x, y, shade);
 				}
