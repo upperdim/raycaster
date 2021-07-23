@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	Player player = {14.7, 5.09, 0.0, 0.01, 0.0035};
+	Player player = {14.7, 5.09, 0.0, 0.01, 0.0021};
 	Keys   keys = {0}; // despite looking sketchy, allows smooth movement w/ multiple keys
 	Map    map = map_import("map.txt");
 
