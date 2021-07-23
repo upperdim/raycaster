@@ -1,4 +1,4 @@
 #include <stdbool.h>
 
-int debugMode = false;
-int debugOutOfScreenFlag = false;
+bool debugMode = false;
+bool debugOutOfScreenFlag = false;

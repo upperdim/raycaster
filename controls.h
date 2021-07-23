@@ -8,6 +8,6 @@ typedef struct {
 	int right;
 } Keys;
 
-int limitFramerate;
+bool limitFramerate;
 
 #endif

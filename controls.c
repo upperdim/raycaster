@@ -1,3 +1,3 @@
 #include <stdbool.h>
 
-int limitFramerate = false;
+bool limitFramerate = false;

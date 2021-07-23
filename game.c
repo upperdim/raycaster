@@ -1,3 +1,3 @@
 #include <stdbool.h>
 
-int gameOver = false;
+bool gameOver = false;
