@@ -33,7 +33,7 @@ Map map_import(char *mappath)
 		exit(2);
 	}
 
-	char ch;
+	int ch;
 	int mapIndex = 0;
 	int currRowLen = 0, prevRowLen = 0, rowCnt = 0;
 	int isFirstRun = true;
