@@ -213,22 +213,7 @@ int main(int argc, char *argv[])
 							}
 						}
 
-						// TODO: non-joke sorting algorithm here...
-						for (int si = 0; si < 4; ++si) {
-							for (int sj = 0; sj < 3; sj++) {
-								if (tile_corners[sj].x < tile_corners[sj + 1].x) {
-									// Swap corners
-									double tmpx = tile_corners[sj].x;
-									double tmpy = tile_corners[sj].y;
-
-									tile_corners[sj].x = tile_corners[sj+1].x;
-									tile_corners[sj].y = tile_corners[sj+1].y;
-
-									tile_corners[sj+1].x = tmpx;
-									tile_corners[sj+1].y = tmpy;
-								}
-							}
-						}
+						qsort(&tile_corners, 4, sizeof(tile_corners[0]), vec2d_compare_x);
 
 						double bound = 0.004;
 						if (acos(tile_corners[0].y) < bound) isBoundary = true;
