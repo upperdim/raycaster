@@ -248,11 +248,7 @@ int main(int argc, char *argv[])
 
 		SDL_UpdateWindowSurface(window);
 		cap_framerate(delta);
-
-		if (debugMode) {
-			printf("x: %.2lf - y: %.2lf - a: %.2lf - dt: %lf - FPS: %d\n", 
-						player.posx, player.posy, player.angle, delta, (int) (1000 / delta));
-		}
+		print_debug_info(&player, delta);
 	}
 
 	if (debugMode && debugOutOfScreenFlag) {
