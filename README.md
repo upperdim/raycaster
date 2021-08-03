@@ -1,5 +1,5 @@
 # Raycaster
-Raycaster from scratch in C &amp; SDL 2.
+Raycaster from scratch in C and SDL2.
 
 ![screenshot](img/rotate.GIF)
 
