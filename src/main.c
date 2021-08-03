@@ -247,9 +247,7 @@ int main(int argc, char *argv[])
 		}
 
 		SDL_UpdateWindowSurface(window);
-		if (limitFramerate && delta < FRAME_LIMIT_MS) {
-			SDL_Delay(FRAME_LIMIT_MS - delta);
-		}
+		cap_framerate(delta);
 
 		if (debugMode) {
 			printf("x: %.2lf - y: %.2lf - a: %.2lf - dt: %lf - FPS: %d\n", 

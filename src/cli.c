@@ -2,10 +2,12 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "cli.h"
-#include "debug.h"
 #include "controls.h"
+#include "graphics.h"
+#include "debug.h"
 #include "game.h"
+#include "cli.h"
+
 
 void print_version()
 {

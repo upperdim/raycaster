@@ -6,6 +6,7 @@
 double fov = 3.14159 / 2.5;
 double maxRenderDist = 16.0;
 Color backgroundColor = {255, 0, 0, 0};
+bool limitFramerate = false;
 
 void draw_pixel(Screen *scr, int x, int y, Color c)
 {
@@ -34,4 +35,11 @@ void screen_fill(Screen *scr, Color c)
 void screen_clear(Screen *scr)
 {
 	screen_fill(scr, backgroundColor);
+}
+
+void cap_framerate(double deltaTime)
+{
+	if (limitFramerate && deltaTime < FRAME_LIMIT_MS) {
+		SDL_Delay(FRAME_LIMIT_MS - deltaTime);
+	}
 }
