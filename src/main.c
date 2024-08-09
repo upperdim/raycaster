@@ -194,32 +194,34 @@ int main(int argc, char *argv[])
 				if (testX < 0 || testX >= map.width || testY < 0 || testY >= map.height) {
 					hitWall = true;
 					distanceToWall = maxRenderDist;
-				} else {
-					if (is_wall(map.data[testX * map.width + testY])) {
-						hitWall = true;
+					continue;
+				}
 
-						Vec2d tile_corners[4];
+				if (!is_wall(map.data[testX * map.width + testY]))
+					continue;
 
-						int corner_index = 0;
-						for (int tx = 0; tx < 2; tx++) {
-							for (int ty = 0; ty < 2; ty++) {
-								// Angle of corner to eye
-								double vy = (double)testY + ty - player.posy;
-								double vx = (double)testX + tx - player.posx;
-								double d = sqrt(vx * vx + vy * vy);
-								double dot = (eyeX * vx / d) + (eyeY * vy / d);
+				hitWall = true;
 
-								tile_corners[corner_index++] = (Vec2d) {d, dot};
-							}
-						}
+				Vec2d tile_corners[4];
 
-						qsort(&tile_corners, 4, sizeof(tile_corners[0]), vec2d_compare_x);
+				int corner_index = 0;
+				for (int tx = 0; tx < 2; tx++) {
+					for (int ty = 0; ty < 2; ty++) {
+						// Angle of corner to eye
+						double vy = (double)testY + ty - player.posy;
+						double vx = (double)testX + tx - player.posx;
+						double d = sqrt(vx * vx + vy * vy);
+						double dot = (eyeX * vx / d) + (eyeY * vy / d);
 
-						double bound = 0.004;
-						if (acos(tile_corners[0].y) < bound) isBoundary = true;
-						if (acos(tile_corners[1].y) < bound) isBoundary = true;
+						tile_corners[corner_index++] = (Vec2d) {d, dot};
 					}
 				}
+
+				qsort(&tile_corners, 4, sizeof(tile_corners[0]), vec2d_compare_x);
+
+				double bound = 0.004;
+				if (acos(tile_corners[0].y) < bound) isBoundary = true;
+				if (acos(tile_corners[1].y) < bound) isBoundary = true;
 			}
 
 			int ceiling = (double) (screen.height / 2.0) - screen.height / ((double) distanceToWall);
