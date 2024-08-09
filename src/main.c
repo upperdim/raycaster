@@ -180,49 +180,49 @@ int main(int argc, char *argv[])
 			double stepSize = 0.1;
 			double distanceToWall = 0.0;
 
-			int hitWall = false; // did ray hit any wall?
-			int isBoundary = false; // did ray hit a boundry between two wall blocks?
-
 			double eyeX = sin(rayAngle);
 			double eyeY = cos(rayAngle);
 
-			while (!hitWall && distanceToWall < maxRenderDist) {
+			int testX = 0;
+			int testY = 0;
+
+			while (distanceToWall < maxRenderDist) {
 				distanceToWall += stepSize;
-				int testX = (int) (player.posx + eyeX * distanceToWall);
-				int testY = (int) (player.posy + eyeY * distanceToWall);
+				testX = (int) (player.posx + eyeX * distanceToWall);
+				testY = (int) (player.posy + eyeY * distanceToWall);
 
 				if (testX < 0 || testX >= map.width || testY < 0 || testY >= map.height) {
-					hitWall = true;
 					distanceToWall = maxRenderDist;
-					continue;
+					break;
 				}
 
 				if (!is_wall(map.data[testX * map.width + testY]))
 					continue;
 
-				hitWall = true;
-
-				Vec2d tile_corners[4];
-
-				int corner_index = 0;
-				for (int tx = 0; tx < 2; tx++) {
-					for (int ty = 0; ty < 2; ty++) {
-						// Angle of corner to eye
-						double vy = (double)testY + ty - player.posy;
-						double vx = (double)testX + tx - player.posx;
-						double d = sqrt(vx * vx + vy * vy);
-						double dot = (eyeX * vx / d) + (eyeY * vy / d);
-
-						tile_corners[corner_index++] = (Vec2d) {d, dot};
-					}
-				}
-
-				qsort(&tile_corners, 4, sizeof(tile_corners[0]), vec2d_compare_x);
-
-				double bound = 0.004;
-				if (acos(tile_corners[0].y) < bound) isBoundary = true;
-				if (acos(tile_corners[1].y) < bound) isBoundary = true;
+				break;
 			}
+			Vec2d tile_corners[4];
+
+			int corner_index = 0;
+			for (int tx = 0; tx < 2; tx++) {
+				for (int ty = 0; ty < 2; ty++) {
+					// Angle of corner to eye
+					double vy = (double)testY + ty - player.posy;
+					double vx = (double)testX + tx - player.posx;
+					double d = sqrt(vx * vx + vy * vy);
+					double dot = (eyeX * vx / d) + (eyeY * vy / d);
+
+					tile_corners[corner_index++] = (Vec2d) {d, dot};
+				}
+			}
+
+			qsort(&tile_corners, 4, sizeof(tile_corners[0]), vec2d_compare_x);
+
+			int isBoundary = false; // did ray hit a boundry between two wall blocks?
+			double bound = 0.004;
+			if (acos(tile_corners[0].y) < bound) isBoundary = true;
+			if (acos(tile_corners[1].y) < bound) isBoundary = true;
+			
 
 			int ceiling = (double) (screen.height / 2.0) - screen.height / ((double) distanceToWall);
 			int floor = screen.height - ceiling;
