@@ -82,3 +82,8 @@ int is_wall(char mapElement)
 	default : return false;
 	}
 }
+
+int is_out_of_bounds(Map *m, int x, int y)
+{
+	return x < 0 || x >= m->width || y < 0 || y >= m->height;
+}

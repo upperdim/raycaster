@@ -191,18 +191,16 @@ int main(int argc, char *argv[])
 				testX = (int) (player.posx + eyeX * distanceToWall);
 				testY = (int) (player.posy + eyeY * distanceToWall);
 
-				if (testX < 0 || testX >= map.width || testY < 0 || testY >= map.height) {
+				if (is_out_of_bounds(&map, testX, testY)) {
 					distanceToWall = maxRenderDist;
 					break;
 				}
 
-				if (!is_wall(map.data[testX * map.width + testY]))
-					continue;
-
-				break;
+				if (is_wall(map.data[testX * map.width + testY]))
+					break;
 			}
-			Vec2d tile_corners[4];
 
+			Vec2d tile_corners[4];
 			int corner_index = 0;
 			for (int tx = 0; tx < 2; tx++) {
 				for (int ty = 0; ty < 2; ty++) {
@@ -219,10 +217,11 @@ int main(int argc, char *argv[])
 			qsort(&tile_corners, 4, sizeof(tile_corners[0]), vec2d_compare_x);
 
 			int isBoundary = false; // did ray hit a boundry between two wall blocks?
-			double bound = 0.004;
-			if (acos(tile_corners[0].y) < bound) isBoundary = true;
-			if (acos(tile_corners[1].y) < bound) isBoundary = true;
-			
+			if (distanceToWall < maxRenderDist) {
+				double bound = 0.004;
+				if (acos(tile_corners[0].y) < bound) isBoundary = true;
+				if (acos(tile_corners[1].y) < bound) isBoundary = true;
+			}
 
 			int ceiling = (double) (screen.height / 2.0) - screen.height / ((double) distanceToWall);
 			int floor = screen.height - ceiling;
