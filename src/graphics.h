@@ -2,7 +2,8 @@
 #define __GRAPHICS_H_
 
 #include <SDL2/SDL.h>
-
+#include "player.h"
+#include "map.h"
 
 #define FRAME_LIMIT_FPS 60
 #define FRAME_LIMIT_MS (1000 / FRAME_LIMIT_FPS)
@@ -36,6 +37,6 @@ void draw_rect(Screen *, int, int, int, int, Color);
 void screen_fill(Screen *, Color);
 void screen_clear(Screen *);
 void cap_framerate(double deltaTime);
-
+void render(Screen *screen, Player *player, Map *map);
 
 #endif
