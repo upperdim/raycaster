@@ -1,8 +1,6 @@
 #ifndef __NPC_H_
 #define __NPC_H_
 
-#define NPC_COUNT 2
-
 typedef enum {
 	ALIVE = 0,
 	DEAD
