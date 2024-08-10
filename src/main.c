@@ -20,7 +20,7 @@ int init(SDL_Window **window, SDL_Surface **surface, Screen *scr)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		printf("Error initializing SDL: %s\n", SDL_GetError());
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	*window = SDL_CreateWindow("Ray Caster",
@@ -31,7 +31,7 @@ int init(SDL_Window **window, SDL_Surface **surface, Screen *scr)
 	if (!(*window)) {
 		printf("Error creating window: %s\n", SDL_GetError());
 		SDL_Quit();
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	*surface = SDL_GetWindowSurface(*window);
@@ -39,7 +39,7 @@ int init(SDL_Window **window, SDL_Surface **surface, Screen *scr)
 		printf("Error creating surface: %s\n", SDL_GetError());
 		SDL_DestroyWindow(*window);
 		SDL_Quit();
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	scr->pixelsArr = (*surface)->pixels;
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 
 	if (init(&window, &windowSurface, &screen)) {
 		printf("Error! Failed to initialize.\n");
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	Player player = {14.7, 5.09, 0.0, 0.01, 0.0021};

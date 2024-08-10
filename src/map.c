@@ -19,7 +19,7 @@ Map map_import(char *mappath)
 	FILE *mapfile = fopen(mappath, "rb");
 	if (mapfile == NULL) {
 		printf("Error! Failed opening file %s\n", mappath);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	fseek(mapfile, 0, SEEK_END);
@@ -30,7 +30,7 @@ Map map_import(char *mappath)
 	map.data = (char *) calloc(len + 1, sizeof(char));
 	if (map.data == NULL) {
 		printf("Error! Failed allocating memory.\n");
-		exit(2);
+		exit(EXIT_FAILURE);
 	}
 
 	int ch;
@@ -45,7 +45,7 @@ Map map_import(char *mappath)
 				map.width = currRowLen;
 			} else if (currRowLen != prevRowLen) {
 				printf("Error! Map has rows with different size!\n");
-				exit(3);
+				exit(EXIT_FAILURE);
 			}
 
 			prevRowLen = currRowLen;
