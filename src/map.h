@@ -3,7 +3,7 @@
 
 #include "player.h"
 
-typedef struct {
+typedef struct Map {
 	char *data;
 	int height;
 	int width;
@@ -11,7 +11,7 @@ typedef struct {
 
 void map_print(Map *);
 Map map_import(char *);
-char get_player_tile(Map *, Player *);
+char get_player_tile(Map *m, Player *p);
 int is_wall(char);
 int is_out_of_bounds(Map *m, int x, int y);
 

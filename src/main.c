@@ -72,111 +72,15 @@ int main(int argc, char *argv[])
 		double delta = dt_ms(oldtime);
 		oldtime = clock();
 
-		SDL_Event event;
-		while (SDL_PollEvent(&event)) {
-			switch (event.type) {
-			case SDL_QUIT:
-				gameOver = true;
-				break;
-
-			case SDL_WINDOWEVENT:
-				if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-					windowSurface = SDL_GetWindowSurface(window);
-					screen.pixelsArr = windowSurface->pixels;
-					screen.width = windowSurface->w;
-					screen.height = windowSurface->h;
-					if (debugMode) printf("Window resized to w: %d, h: %d\n", screen.width, screen.height);
-				}
-				break;
-
-			case SDL_KEYDOWN:
-				switch (event.key.keysym.scancode) {
-				case SDL_SCANCODE_W:
-				case SDL_SCANCODE_UP:
-					keys.up = 1;
-					break;
-				case SDL_SCANCODE_S:
-				case SDL_SCANCODE_DOWN:
-					keys.down = 1;
-					break;
-				case SDL_SCANCODE_A:
-				case SDL_SCANCODE_LEFT:
-					keys.left = 1;
-					break;
-				case SDL_SCANCODE_D:
-				case SDL_SCANCODE_RIGHT:
-					keys.right = 1;
-					break;
-				case SDL_SCANCODE_Q:
-				case SDL_SCANCODE_ESCAPE:
-					gameOver = true;
-					break;
-				case SDL_SCANCODE_V:
-					limitFramerate = !limitFramerate;
-					if (debugMode) printf("Frame limiter switched to %s\n", limitFramerate ? "ON" : "OFF");
-					break;
-				default:
-					break;
-				}
-				break;
-
-			case SDL_KEYUP:
-				switch (event.key.keysym.scancode) {
-				case SDL_SCANCODE_W:
-				case SDL_SCANCODE_UP:
-					keys.up = 0;
-					break;
-				case SDL_SCANCODE_S:
-				case SDL_SCANCODE_DOWN:
-					keys.down = 0;
-					break;
-				case SDL_SCANCODE_A:
-				case SDL_SCANCODE_LEFT:
-					keys.left = 0;
-					break;
-				case SDL_SCANCODE_D:
-				case SDL_SCANCODE_RIGHT:
-					keys.right = 0;
-					break;
-				default:
-					break;
-				}
-				break;
-
-			default:
-				break;
-			}
-		}
-
-		if (keys.up && !keys.down) {
-			double newposx = player.posx + sin(player.angle) * player.walkingspeed * delta;
-			double newposy = player.posy + cos(player.angle) * player.walkingspeed * delta;
-
-			if (!is_wall(map.data[(int) newposx * map.width + (int) newposy])) {
-				player.posx = newposx;
-				player.posy = newposy;
-			}
-		}
-
-		if (keys.down && !keys.up) {
-			double newposx = player.posx - sin(player.angle) * player.walkingspeed * delta;
-			double newposy = player.posy - cos(player.angle) * player.walkingspeed * delta;
-
-			if (!is_wall(map.data[(int) newposx * map.width + (int) newposy])) {
-				player.posx = newposx;
-				player.posy = newposy;
-			}
-		}
-
-		if (keys.left && !keys.right) player.angle -= player.turningspeed * delta;
-		if (keys.right && !keys.left) player.angle += player.turningspeed * delta;
+		handle_SDL_events(&screen, windowSurface, window, &keys);
+		move_player(&player, &keys, &map, delta);
 
 		screen_clear(&screen);
-
 		render(&screen, &player, &map);
 
 		SDL_UpdateWindowSurface(window);
 		cap_framerate(delta);
+
 		print_debug_info(&player, delta);
 	}
 

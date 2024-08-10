@@ -1,6 +1,7 @@
 #ifndef __GRAPHICS_H_
 #define __GRAPHICS_H_
 
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "player.h"
 #include "map.h"
@@ -9,7 +10,6 @@
 #define FRAME_LIMIT_MS (1000 / FRAME_LIMIT_FPS)
 #define FLOOR_BRIGHTNESS_MIN 15
 #define FLOOR_BRIGHTNESS_MAX 120
-
 
 typedef struct {
 	Uint8 r;
