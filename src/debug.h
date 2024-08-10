@@ -3,8 +3,8 @@
 
 #include "player.h"
 
-bool debugMode;
-bool debugOutOfScreenFlag;
+extern bool debugMode;
+extern bool debugOutOfScreenFlag;
 
 
 void print_debug_info(Player *, double deltaTime);

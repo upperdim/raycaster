@@ -27,10 +27,10 @@ typedef struct {
 } Screen;
 
 
-double fov;
-double maxRenderDist;
-Color backgroundColor;
-bool limitFramerate;
+extern double fov;
+extern double maxRenderDist;
+extern Color backgroundColor;
+extern bool limitFramerate;
 
 
 void draw_pixel(Screen *, int, int, Color);
