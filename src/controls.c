@@ -40,6 +40,9 @@ void handle_SDL_events(Screen *screen, SDL_Surface *windowSurface, SDL_Window *w
 			case SDL_SCANCODE_RIGHT:
 				keys->right = 1;
 				break;
+			case SDL_SCANCODE_SPACE:
+				keys->space = 1;
+				break;
 			case SDL_SCANCODE_Q:
 			case SDL_SCANCODE_ESCAPE:
 				gameOver = true;
@@ -70,6 +73,9 @@ void handle_SDL_events(Screen *screen, SDL_Surface *windowSurface, SDL_Window *w
 			case SDL_SCANCODE_D:
 			case SDL_SCANCODE_RIGHT:
 				keys->right = 0;
+				break;
+			case SDL_SCANCODE_SPACE:
+				keys->space = 0;
 				break;
 			default:
 				break;

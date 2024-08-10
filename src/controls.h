@@ -9,6 +9,7 @@ typedef struct Keys {
 	int down;
 	int left;
 	int right;
+	int space;
 } Keys;
 
 void handle_SDL_events(Screen *screen, SDL_Surface *windowSurface, SDL_Window *window, Keys *keys);

@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include "player.h"
 #include "map.h"
+#include "npc.h"
 
 #define FRAME_LIMIT_FPS 60
 #define FRAME_LIMIT_MS (1000.0 / FRAME_LIMIT_FPS)
@@ -37,6 +38,6 @@ void draw_rect(Screen *, int, int, int, int, Color);
 void screen_fill(Screen *, Color);
 void screen_clear(Screen *);
 void cap_framerate(double deltaTime);
-void render_ray(int x, Screen *screen, Player *player, Map *map);
+void render(Screen *screen, Player *player, Map *map, Npc *npcs);
 
 #endif

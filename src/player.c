@@ -2,8 +2,9 @@
 #include "player.h"
 #include "controls.h"
 #include "map.h"
+#include "npc.h"
 
-void move_player(Player *player, Keys *keys, Map *map, double delta)
+void player_move(Player *player, Keys *keys, Map *map, double delta)
 {
 	if (keys->up && !keys->down) {
 		double newposx = player->posx + sin(player->angle) * player->walkingspeed * delta;
@@ -30,4 +31,9 @@ void move_player(Player *player, Keys *keys, Map *map, double delta)
 
 	if (keys->right && !keys->left)
 		player->angle += player->turningspeed * delta;
+}
+
+void player_attack(Player *player, struct Keys *keys, struct Map *map, struct s_Npc *npcs)
+{
+	// TBA
 }

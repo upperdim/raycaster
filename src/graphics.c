@@ -74,7 +74,7 @@ static int is_boundary(Player *player, double distanceToWall, int testX, int tes
 	return 0;
 }
 
-void render_ray(int x, Screen *screen, Player *player, Map *map)
+static void render_ray(int x, Screen *screen, Player *player, Map *map, Npc *npcs)
 {
 	double rayAngle = (player->angle - fov / 2.0) + ((double) x / (double) screen->width) * fov;
 
@@ -128,5 +128,12 @@ void render_ray(int x, Screen *screen, Player *player, Map *map)
 			shade = (Color) {0, c, 0, 255};
 			draw_pixel(screen, x, y, shade);
 		}
+	}
+}
+
+void render(Screen *screen, Player *player, Map *map, Npc *npcs)
+{
+	for (int x = 0; x < screen->width; ++x) {
+		render_ray(x, screen, player, map, npcs);
 	}
 }

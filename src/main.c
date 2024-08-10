@@ -9,6 +9,7 @@
 
 #include "cli.h"
 #include "map.h"
+#include "npc.h"
 #include "util.h"
 #include "game.h"
 #include "debug.h"
@@ -66,6 +67,9 @@ int main(int argc, char *argv[])
 	Player player = {14.7, 5.09, 0.0, 0.01, 0.0021};
 	Keys   keys = {0};
 	Map    map = map_import("maps/default.txt");
+	Npc    *npcs = NULL;
+	npc_add(&npcs, 16.7, 5.09, ALIVE);
+	npc_add(&npcs, 12.7, 5.09, ALIVE);
 
 	clock_t oldtime = clock();
 	while (!gameOver) {
@@ -73,11 +77,11 @@ int main(int argc, char *argv[])
 		oldtime = clock();
 
 		handle_SDL_events(&screen, windowSurface, window, &keys);
-		move_player(&player, &keys, &map, delta);
+		player_move(&player, &keys, &map, delta);
+		player_attack(&player, &keys, &map, npcs);
 
 		screen_clear(&screen);
-		for (int x = 0; x < screen.width; ++x)
-			render_ray(x, &screen, &player, &map);
+		render(&screen, &player, &map, npcs);
 
 		SDL_UpdateWindowSurface(window);
 		cap_framerate(delta);
