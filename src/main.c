@@ -76,7 +76,8 @@ int main(int argc, char *argv[])
 		move_player(&player, &keys, &map, delta);
 
 		screen_clear(&screen);
-		render(&screen, &player, &map);
+		for (int x = 0; x < screen.width; ++x)
+			render_ray(x, &screen, &player, &map);
 
 		SDL_UpdateWindowSurface(window);
 		cap_framerate(delta);

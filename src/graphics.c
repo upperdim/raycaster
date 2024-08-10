@@ -74,61 +74,59 @@ static int is_boundary(Player *player, double distanceToWall, int testX, int tes
 	return 0;
 }
 
-void render(Screen *screen, Player *player, Map *map)
+void render_ray(int x, Screen *screen, Player *player, Map *map)
 {
-	for (int x = 0; x < screen->width; ++x) {
-		double rayAngle = (player->angle - fov / 2.0) + ((double) x / (double) screen->width) * fov;
+	double rayAngle = (player->angle - fov / 2.0) + ((double) x / (double) screen->width) * fov;
 
-		double stepSize = 0.1;
-		double distanceToWall = 0.0;
+	double stepSize = 0.1;
+	double distanceToWall = 0.0;
 
-		double eyeX = sin(rayAngle);
-		double eyeY = cos(rayAngle);
+	double eyeX = sin(rayAngle);
+	double eyeY = cos(rayAngle);
 
-		int testX = 0;
-		int testY = 0;
+	int testX = 0;
+	int testY = 0;
 
-		while (distanceToWall < maxRenderDist) {
-			distanceToWall += stepSize;
-			testX = (int) (player->posx + eyeX * distanceToWall);
-			testY = (int) (player->posy + eyeY * distanceToWall);
+	while (distanceToWall < maxRenderDist) {
+		distanceToWall += stepSize;
+		testX = (int) (player->posx + eyeX * distanceToWall);
+		testY = (int) (player->posy + eyeY * distanceToWall);
 
-			if (is_out_of_bounds(map, testX, testY)) {
-				distanceToWall = maxRenderDist;
-				break;
-			}
-
-			if (is_wall(map->data[testX * map->width + testY]))
-				break;
+		if (is_out_of_bounds(map, testX, testY)) {
+			distanceToWall = maxRenderDist;
+			break;
 		}
 
-		int isBoundary = is_boundary(player, distanceToWall, testX, testY, eyeX, eyeY);
+		if (is_wall(map->data[testX * map->width + testY]))
+			break;
+	}
 
-		distanceToWall = distanceToWall * cos(rayAngle - player->angle); // correct fisheye
+	int isBoundary = is_boundary(player, distanceToWall, testX, testY, eyeX, eyeY);
 
-		int ceiling = (double) (screen->height / 2.0) - screen->height / ((double) distanceToWall);
-		int floor = screen->height - ceiling;
+	distanceToWall = distanceToWall * cos(rayAngle - player->angle); // correct fisheye
 
-		Color shade;
-		if (isBoundary) {
-			shade = (Color) {0, 0, 0, 0};
-		} else {
-			uint8_t c = 255 - (distanceToWall * 255 / maxRenderDist) + 15;
-			shade = (Color) {c, c, c, 255};
-		}
+	int ceiling = (double) (screen->height / 2.0) - screen->height / ((double) distanceToWall);
+	int floor = screen->height - ceiling;
 
-		for (int y = 0; y < screen->height; ++y) {
-			if (y <= ceiling) 
-				draw_pixel(screen, x, y, (Color) {0, 0, 0, 0});
-			else if (y > ceiling && y <= floor) 
-				draw_pixel(screen, x, y, shade); // wall
-			else {
-				// Floor
-				int half_screen_height = (screen->height-1) / 2;
-				uint8_t c = (((FLOOR_BRIGHTNESS_MAX - FLOOR_BRIGHTNESS_MIN) * (y - half_screen_height)) / half_screen_height) + FLOOR_BRIGHTNESS_MIN;
-				shade = (Color) {0, c, 0, 255};
-				draw_pixel(screen, x, y, shade);
-			}
+	Color shade;
+	if (isBoundary) {
+		shade = (Color) {0, 0, 0, 0};
+	} else {
+		uint8_t c = 255 - (distanceToWall * 255 / maxRenderDist) + 15;
+		shade = (Color) {c, c, c, 255};
+	}
+
+	for (int y = 0; y < screen->height; ++y) {
+		if (y <= ceiling) 
+			draw_pixel(screen, x, y, (Color) {0, 0, 0, 0});
+		else if (y > ceiling && y <= floor) 
+			draw_pixel(screen, x, y, shade); // wall
+		else {
+			// Floor
+			int half_screen_height = (screen->height-1) / 2;
+			uint8_t c = (((FLOOR_BRIGHTNESS_MAX - FLOOR_BRIGHTNESS_MIN) * (y - half_screen_height)) / half_screen_height) + FLOOR_BRIGHTNESS_MIN;
+			shade = (Color) {0, c, 0, 255};
+			draw_pixel(screen, x, y, shade);
 		}
 	}
 }

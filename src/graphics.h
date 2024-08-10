@@ -37,6 +37,6 @@ void draw_rect(Screen *, int, int, int, int, Color);
 void screen_fill(Screen *, Color);
 void screen_clear(Screen *);
 void cap_framerate(double deltaTime);
-void render(Screen *screen, Player *player, Map *map);
+void render_ray(int x, Screen *screen, Player *player, Map *map);
 
 #endif
