@@ -1,7 +1,7 @@
 ifeq ($(OS),Windows_NT)
 	NAME = raycaster.exe
 	DELETE_NAME = if exist $(NAME) del $(NAME)
-	DELETE_OBJS = clean_objs.bat
+	DELETE_OBJS = tools/clean_objs.bat
 	DELETE_OBJS_DIR = if exist $(OBJ_DIR) rmdir /s /q $(OBJ_DIR)
 	MKDIR_SAFE = mkdir
 else
