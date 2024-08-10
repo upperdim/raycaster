@@ -37,7 +37,7 @@ fclean: clean
 
 re: fclean all
 
-runlim: $(NAME)
+run: $(NAME)
 	$(NAME)
 
 runlim: $(NAME)
