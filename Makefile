@@ -4,6 +4,8 @@ ifeq ($(OS),Windows_NT)
 	DELETE_OBJS = tools/clean_objs.bat
 	DELETE_OBJS_DIR = if exist $(OBJ_DIR) rmdir /s /q $(OBJ_DIR)
 	MKDIR_SAFE = mkdir
+	LIBS = -L"C:\libsdl\lib" -lmingw32 -lSDL2main -lSDL2 -mwindows
+	INCLUDES = -I"C:\libsdl\include"
 else
 # TODO: untested
 	NAME = raycaster
@@ -11,6 +13,8 @@ else
 	DELETE_OBJS = rm -f $(OBJS)
 	DELETE_OBJS_DIR = rm -rf $(OBJ_DIR)
 	MKDIR_SAFE = mkdir -p
+	LIBS = -L"C:\libsdl\lib" -lmingw32 -lSDL2main -lSDL2 -mwindows
+	INCLUDES = -I"C:\libsdl\include"
 # end of untested
 endif
 
@@ -18,16 +22,19 @@ SRCS = $(wildcard src/*.c)
 OBJ_DIR = obj
 OBJS = $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
+CC = gcc
+CFLAGS = -Wall -Wextra -Ofast
+
 all: $(NAME)
 
 $(NAME): $(OBJ_DIR) $(OBJS)
-	gcc $(OBJS) -L"C:\libsdl\lib" -lmingw32 -lSDL2main -lSDL2 -mwindows -I"C:\libsdl\include" -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(INCLUDES) -o $(NAME)
 
 $(OBJ_DIR):
 	$(MKDIR_SAFE) $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: src/%.c
-	gcc -Wall -Wextra -Ofast -I"C:\libsdl\include" -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean: $(DELETE_OBJS)
 	$(DELETE_OBJS_DIR)
