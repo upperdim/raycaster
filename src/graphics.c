@@ -47,6 +47,33 @@ void cap_framerate(double deltaTime)
 	}
 }
 
+static int is_boundary(Player *player, double distanceToWall, int testX, int testY, double eyeX, double eyeY)
+{
+	Vec2d tile_corners[4];
+	int corner_index = 0;
+	for (int tx = 0; tx < 2; tx++) {
+		for (int ty = 0; ty < 2; ty++) {
+			// Angle of corner to eye
+			double vy = (double)testY + ty - player->posy;
+			double vx = (double)testX + tx - player->posx;
+			double d = sqrt(vx * vx + vy * vy);
+			double dot = (eyeX * vx / d) + (eyeY * vy / d);
+
+			tile_corners[corner_index++] = (Vec2d) {d, dot};
+		}
+	}
+
+	qsort(&tile_corners, 4, sizeof(tile_corners[0]), vec2d_compare_x);
+
+	if (distanceToWall < maxRenderDist) {
+		double bound = 0.004;
+		if (acos(tile_corners[0].y) < bound || acos(tile_corners[1].y) < bound)
+			return 1;
+	}
+
+	return 0;
+}
+
 void render(Screen *screen, Player *player, Map *map)
 {
 	for (int x = 0; x < screen->width; ++x) {
@@ -75,37 +102,16 @@ void render(Screen *screen, Player *player, Map *map)
 				break;
 		}
 
-		Vec2d tile_corners[4];
-		int corner_index = 0;
-		for (int tx = 0; tx < 2; tx++) {
-			for (int ty = 0; ty < 2; ty++) {
-				// Angle of corner to eye
-				double vy = (double)testY + ty - player->posy;
-				double vx = (double)testX + tx - player->posx;
-				double d = sqrt(vx * vx + vy * vy);
-				double dot = (eyeX * vx / d) + (eyeY * vy / d);
-
-				tile_corners[corner_index++] = (Vec2d) {d, dot};
-			}
-		}
-
-		qsort(&tile_corners, 4, sizeof(tile_corners[0]), vec2d_compare_x);
-
-		int isBoundary = false; // did ray hit a boundry between two wall blocks?
-		if (distanceToWall < maxRenderDist) {
-			double bound = 0.004;
-			if (acos(tile_corners[0].y) < bound) isBoundary = true;
-			if (acos(tile_corners[1].y) < bound) isBoundary = true;
-		}
-
 		int ceiling = (double) (screen->height / 2.0) - screen->height / ((double) distanceToWall);
 		int floor = screen->height - ceiling;
 
-		// Wall color, shaded respective to distance 
-		uint8_t c = 255 - (distanceToWall * 255 / maxRenderDist) + 15;
-		Color shade = {c, c, c, 255};
-		
-		if (isBoundary) shade = (Color) {0, 0, 0, 0};
+		Color shade;
+		if (is_boundary(player, distanceToWall, testX, testY, eyeX, eyeY)) {
+			shade = (Color) {0, 0, 0, 0};
+		} else {
+			uint8_t c = 255 - (distanceToWall * 255 / maxRenderDist) + 15;
+			shade = (Color) {c, c, c, 255};
+		}
 
 		for (int y = 0; y < screen->height; ++y) {
 			if (y <= ceiling) 
@@ -115,7 +121,7 @@ void render(Screen *screen, Player *player, Map *map)
 			else {
 				// Floor
 				int half_screen_height = (screen->height-1) / 2;
-				c = (((FLOOR_BRIGHTNESS_MAX - FLOOR_BRIGHTNESS_MIN) * (y - half_screen_height)) / half_screen_height) + FLOOR_BRIGHTNESS_MIN;
+				uint8_t c = (((FLOOR_BRIGHTNESS_MAX - FLOOR_BRIGHTNESS_MIN) * (y - half_screen_height)) / half_screen_height) + FLOOR_BRIGHTNESS_MIN;
 				shade = (Color) {0, c, 0, 255};
 				draw_pixel(screen, x, y, shade);
 			}
