@@ -68,8 +68,8 @@ int main(int argc, char *argv[])
 	Keys   keys = {0};
 	Map    map = map_import("maps/default.txt");
 	Npc    *npcs = NULL;
-	npc_add(&npcs, 16.7, 5.09, ALIVE);
-	npc_add(&npcs, 12.7, 5.09, ALIVE);
+	npc_list_add(&npcs, 16.7, 5.09, ALIVE);
+	npc_list_add(&npcs, 12.7, 5.09, ALIVE);
 
 	clock_t oldtime = clock();
 	while (!gameOver) {
@@ -92,6 +92,8 @@ int main(int argc, char *argv[])
 	if (debugMode && debugOutOfScreenFlag) {
 		printf("Warning: Out of screen occurred!\n");
 	}
+
+	npc_list_free_all(npcs);
 
 	SDL_FreeSurface(windowSurface);
 	windowSurface = NULL;

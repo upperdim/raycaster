@@ -16,6 +16,7 @@ typedef struct s_Npc {
 } Npc;
 
 Npc	*npc_list_get_last(Npc *list);
-void npc_add(Npc **headPtr, double posx, double posy, NpcState state);
+void npc_list_add(Npc **headPtr, double posx, double posy, NpcState state);
+void npc_list_free_all(Npc *head);
 
 #endif

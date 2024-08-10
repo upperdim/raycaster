@@ -15,7 +15,7 @@ Npc	*npc_list_get_last(Npc *list)
 	return iter;
 }
 
-void npc_add(Npc **headPtr, double posx, double posy, NpcState state)
+void npc_list_add(Npc **headPtr, double posx, double posy, NpcState state)
 {
 	Npc	*last;
 	Npc	*new;
@@ -36,5 +36,22 @@ void npc_add(Npc **headPtr, double posx, double posy, NpcState state)
 	} else {
 		last = npc_list_get_last(*headPtr);
 		last->next = new;
+	}
+}
+
+static void	ft_free_n_null(void **ptr)
+{
+	if (*ptr)
+		free(*ptr);
+	*ptr = NULL;
+}
+
+void npc_list_free_all(Npc *head)
+{
+	while (head != NULL) {
+		Npc *to_free = head;
+		head = head->next;
+		free(to_free);
+		to_free = NULL;
 	}
 }
