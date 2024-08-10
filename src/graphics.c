@@ -6,7 +6,7 @@
 #include "debug.h"
 #include "util.h"
 
-double fov = 3.14159 / 2.5;
+double fov = deg_to_rad(60);
 double maxRenderDist = 16.0;
 Color backgroundColor = {255, 0, 0, 0};
 bool limitFramerate = false;
@@ -102,11 +102,15 @@ void render(Screen *screen, Player *player, Map *map)
 				break;
 		}
 
+		int isBoundary = is_boundary(player, distanceToWall, testX, testY, eyeX, eyeY);
+
+		distanceToWall = distanceToWall * cos(rayAngle - player->angle); // correct fisheye
+
 		int ceiling = (double) (screen->height / 2.0) - screen->height / ((double) distanceToWall);
 		int floor = screen->height - ceiling;
 
 		Color shade;
-		if (is_boundary(player, distanceToWall, testX, testY, eyeX, eyeY)) {
+		if (isBoundary) {
 			shade = (Color) {0, 0, 0, 0};
 		} else {
 			uint8_t c = 255 - (distanceToWall * 255 / maxRenderDist) + 15;
