@@ -21,7 +21,7 @@ OBJS = $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 all: $(NAME)
 
 $(NAME): $(OBJ_DIR) $(OBJS)
-	gcc $(OBJS) -L"C:\libsdl\lib" -lmingw32 -lSDL2main -lSDL2 -I"C:\libsdl\include" -o $(NAME)
+	gcc $(OBJS) -L"C:\libsdl\lib" -lmingw32 -lSDL2main -lSDL2 -mwindows -I"C:\libsdl\include" -o $(NAME)
 
 $(OBJ_DIR):
 	$(MKDIR_SAFE) $(OBJ_DIR)
@@ -36,3 +36,9 @@ fclean: clean
 	$(DELETE_NAME)
 
 re: fclean all
+
+runlim: $(NAME)
+	$(NAME)
+
+runlim: $(NAME)
+	$(NAME) -l
