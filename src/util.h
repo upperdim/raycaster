@@ -10,6 +10,5 @@ typedef struct {
 } Vec2d;
 
 int vec2d_compare_x(const void *, const void *);
-double degree_to_radian(double degree);
 
 #endif
