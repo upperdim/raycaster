@@ -40,19 +40,12 @@ void npc_list_add(Npc **headPtr, double posx, double posy, NpcState state)
 	}
 }
 
-static void	ft_free_n_null(void **ptr)
-{
-	if (*ptr)
-		free(*ptr);
-	*ptr = NULL;
-}
-
 void npc_list_free_all(Npc *head)
 {
 	while (head != NULL) {
 		Npc *to_free = head;
 		head = head->next;
 		free(to_free);
-		to_free = NULL;
+		to_free = NULL; // actually have to get a headPtr in order to truly NULL them
 	}
 }
