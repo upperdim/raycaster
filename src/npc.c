@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "npc.h"
 
 // Get a pointer to the last element of the Npc list
