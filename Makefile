@@ -7,15 +7,13 @@ ifeq ($(OS),Windows_NT)
 	LIBS = -L"C:\libsdl\lib" -lmingw32 -lSDL2main -lSDL2 -mwindows
 	INCLUDES = -I"C:\libsdl\include"
 else
-# TODO: untested
 	NAME = raycaster
 	DELETE_NAME = rm -f $(NAME)
 	DELETE_OBJS = rm -f $(OBJS)
 	DELETE_OBJS_DIR = rm -rf $(OBJ_DIR)
 	MKDIR_SAFE = mkdir -p
-	LIBS = -L"C:\libsdl\lib" -lmingw32 -lSDL2main -lSDL2 -mwindows
-	INCLUDES = -I"C:\libsdl\include"
-# end of untested
+	LIBS = -L/usr/local/lib -lSDL2main -lSDL2 -lm
+	INCLUDES = -I/usr/include/SDL2
 endif
 
 SRCS = $(wildcard src/*.c)
@@ -23,7 +21,8 @@ OBJ_DIR = obj
 OBJS = $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Ofast
+IGNORE_WARNINGS = -Wno-implicit-fallthrough -Wno-unused-parameter
+CFLAGS = -Wall -Wextra -Ofast $(IGNORE_WARNINGS)
 
 all: $(NAME)
 
@@ -36,7 +35,8 @@ $(OBJ_DIR):
 $(OBJ_DIR)/%.o: src/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-clean: $(DELETE_OBJS)
+clean:
+	$(DELETE_OBJS)
 	$(DELETE_OBJS_DIR)
 
 fclean: clean
