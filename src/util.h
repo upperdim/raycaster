@@ -2,8 +2,8 @@
 #define __UTIL_H_
 
 #define PI 3.1415
-#define dt_ms(oldtime) (clock() - (oldtime)) / (CLOCKS_PER_SEC / 1000)
-#define deg_to_rad(deg) ((PI / 180) * deg)
+#define deg_to_rad(deg) ((PI / 180) * (deg))
+#define dt_ms(oldtime) ((clock() - (oldtime)) / (CLOCKS_PER_SEC / 1000))
 
 typedef struct {
 	double x, y;
