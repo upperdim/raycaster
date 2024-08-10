@@ -5,7 +5,7 @@ This raycaster depends only upon putting a single pixel onto the screen.
 
 SDL is only used for interacting with the operating system, obtaining a window etc.
 
-Below gifs are big and may require some time to load in the browser.
+GIFs below are big and may require some time to load in the browser.
 
 ![screenshot](img/rotate.GIF)
 
