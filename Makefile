@@ -1,28 +1,38 @@
 ifeq ($(OS),Windows_NT)
 	NAME = raycaster.exe
-	SEP = \\
-	DELETE = del 
+	DELETE_NAME = if exist $(NAME) del $(NAME)
+	DELETE_OBJS = clean_objs.bat
+	DELETE_OBJS_DIR = if exist $(OBJ_DIR) rmdir /s /q $(OBJ_DIR)
+	MKDIR_SAFE = mkdir
 else
+# TODO: untested
 	NAME = raycaster
-	SEP = /
-	DELETE = rm -f
+	DELETE_NAME = rm -f $(NAME)
+	DELETE_OBJS = rm -f $(OBJS)
+	DELETE_OBJS_DIR = rm -rf $(OBJ_DIR)
+	MKDIR_SAFE = mkdir -p
+# end of untested
 endif
 
-SRC_DIR = src
+SRCS = $(wildcard src/*.c)
 OBJ_DIR = obj
-SRCS = $(SRC_DIR)$(SEP)*.c
-OBJS = *o
+OBJS = $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
 all: $(NAME)
 
-$(NAME):
-	gcc -c $(SRCS) -Wall -Wextra -I"C:\libsdl\include" -L"C:\libsdl\lib" -lmingw32 -lSDL2main -lSDL2
-	gcc -s $(OBJS) -I"C:\libsdl\include" -L"C:\libsdl\lib" -lmingw32 -lSDL2main -lSDL2 -o $(NAME)
+$(NAME): $(OBJ_DIR) $(OBJS)
+	gcc $(OBJS) -L"C:\libsdl\lib" -lmingw32 -lSDL2main -lSDL2 -I"C:\libsdl\include" -o $(NAME)
 
-clean:
-	$(DELETE) $(OBJS)
+$(OBJ_DIR):
+	$(MKDIR_SAFE) $(OBJ_DIR)
+
+$(OBJ_DIR)/%.o: src/%.c
+	gcc -Wall -Wextra -Ofast -I"C:\libsdl\include" -c $< -o $@
+
+clean: $(DELETE_OBJS)
+	$(DELETE_OBJS_DIR)
 
 fclean: clean
-	$(DELETE) $(NAME)
+	$(DELETE_NAME)
 
 re: fclean all
