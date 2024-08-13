@@ -3,10 +3,10 @@
 
 static void	draw_line_from_player(Screen *screen, Player *player, float scaleHoriz, float scaleVert, float angleOffset)
 {
-	for (float frontDist = 1; frontDist > 0; frontDist -= .05) {
+	for (float frontDist = 4; frontDist > 0; frontDist -= .05) {
 		float frontPointX = player->posx + frontDist * sin(player->angle + angleOffset);
 		float frontPointY = player->posy + frontDist * cos(player->angle + angleOffset);
-		draw_rect(screen, frontPointX * scaleHoriz, frontPointY * scaleVert, 2, 2, (Color) {220, 50, 0, 255});
+		draw_rect(screen, frontPointX * scaleHoriz, frontPointY * scaleVert, 2, 2, (Color) {175, 50, 0, 255});
 	}
 }
 
@@ -52,8 +52,11 @@ void draw_minimap(Screen *screen, Player *player, Map *map, Npc *npcs)
 	draw_line_from_player(screen, player, scaleHorizontal, scaleVertical, 0);
 
 	// Draw player rays
-	// float raycast_angle_step = game->fov / game->scr_width;
-	// for (float angle_offset = -game->fov / 2; angle_offset <= +game->fov / 2; angle_offset += raycast_angle_step) {
-	// draw_line_from_player(game, scale_horizontal, scale_vertical, angle_offset);
+	draw_line_from_player(screen, player, scaleHorizontal, scaleVertical, +fov / 2);
+	draw_line_from_player(screen, player, scaleHorizontal, scaleVertical, -fov / 2);
+	
+	// float raycast_angle_step = fov / screen->width;
+	// for (float angle_offset = -fov / 2; angle_offset <= fov / 2; angle_offset += raycast_angle_step) {
+	// 	draw_line_from_player(screen, player, scaleHorizontal, scaleVertical, angle_offset);
 	// }
 }
