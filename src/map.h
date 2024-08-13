@@ -14,5 +14,6 @@ Map map_import(char *);
 char get_player_tile(Map *m, Player *p);
 int is_wall(char);
 int is_out_of_bounds(Map *m, int x, int y);
+char map_get(Map *m, int x, int y);
 
 #endif

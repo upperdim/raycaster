@@ -8,7 +8,7 @@ void map_print(Map *m)
 {
 	for (int i = 0; i < m->height; ++i) {
 		for (int j = 0; j < m->width; ++j) {
-			putchar(m->data[i * m->width + j]);
+			putchar(map_get(m, j, i));
 		}
 		putchar('\n');
 	}
@@ -86,4 +86,9 @@ int is_wall(char mapElement)
 int is_out_of_bounds(Map *m, int x, int y)
 {
 	return x < 0 || x >= m->width || y < 0 || y >= m->height;
+}
+
+char map_get(Map *m, int x, int y)
+{
+	return (m->data[y * m->width + x]);
 }

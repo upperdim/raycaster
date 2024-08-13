@@ -41,7 +41,7 @@ void draw_minimap(Screen *screen, Player *player, Map *map, Npc *npcs)
 				mapY * tile_height,
 				tile_width - 1,
 				tile_height - 1,
-				map->data[mapY * map->width + mapX] == '#' ? WALL_COLOR : SPACE_COLOR);
+				map_get(map, mapX, mapY) == '#' ? WALL_COLOR : SPACE_COLOR);
 		}
 	}
 

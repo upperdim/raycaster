@@ -13,7 +13,7 @@ bool limitFramerate = false;
 
 void draw_pixel(Screen *scr, int x, int y, Color c)
 {
-	if (x < 0 || x > scr->width || y < 0 || y > scr->height) {
+	if (x < 0 || x >= scr->width || y < 0 || y >= scr->height) {
 		debugOutOfScreenFlag = true;
 		return;
 	}
@@ -21,18 +21,21 @@ void draw_pixel(Screen *scr, int x, int y, Color c)
 	scr->pixelsArr[x + y * scr->width] = SDL_MapRGBA(scr->format, c.r, c.g, c.b, c.a);
 }
 
-void draw_rect(Screen *scr, int xstart, int ystart, int xend, int yend, Color c)
+void draw_rect(Screen *scr, int xstart, int ystart, int xlen, int ylen, Color c)
 {
-	for (int i = ystart; i < yend; ++i) {
-		for (int j = xstart; j < xend; ++j) {
-			draw_pixel(scr, i, j, c);
+	const int XLIM = xstart + xlen;
+	const int YLIM = ystart + ylen;
+
+	for (int y = ystart; y < YLIM; ++y) {
+		for (int x = xstart; x < XLIM; ++x) {
+			draw_pixel(scr, x, y, c);
 		}
 	}
 }
 
 void screen_fill(Screen *scr, Color c)
 {
-	draw_rect(scr, 0, 0, scr->height, scr->width, c);
+	draw_rect(scr, 0, 0, scr->width, scr->height, c);
 }
 
 void screen_clear(Screen *scr)
@@ -76,7 +79,7 @@ static int is_boundary(Player *player, double distanceToWall, int testX, int tes
 
 static void render_ray(int x, Screen *screen, Player *player, Map *map, Npc *npcs)
 {
-	double rayAngle = (player->angle - fov / 2.0) + ((double) x / (double) screen->width) * fov;
+	double rayAngle = (player->angle + fov / 2.0) - ((double) x / (double) screen->width) * fov;
 
 	double stepSize = 0.1;
 	double distanceToWall = 0.0;
@@ -97,7 +100,7 @@ static void render_ray(int x, Screen *screen, Player *player, Map *map, Npc *npc
 			break;
 		}
 
-		if (is_wall(map->data[testX * map->width + testY]))
+		if (is_wall(map_get(map, testX, testY)))
 			break;
 	}
 
@@ -116,18 +119,15 @@ static void render_ray(int x, Screen *screen, Player *player, Map *map, Npc *npc
 		shade = (Color) {c, c, c, 255};
 	}
 
-	for (int y = 0; y < screen->height; ++y) {
-		if (y <= ceiling) 
-			draw_pixel(screen, x, y, (Color) {0, 0, 0, 0});
-		else if (y > ceiling && y <= floor) 
-			draw_pixel(screen, x, y, shade); // wall
-		else {
-			// Floor
-			int half_screen_height = (screen->height-1) / 2;
-			uint8_t c = (((FLOOR_BRIGHTNESS_MAX - FLOOR_BRIGHTNESS_MIN) * (y - half_screen_height)) / half_screen_height) + FLOOR_BRIGHTNESS_MIN;
-			shade = (Color) {0, c, 0, 255};
-			draw_pixel(screen, x, y, shade);
-		}
+	draw_rect(screen, x, 0, 1, ceiling, (Color) {0, 0, 0, 0}); // draw ceiling
+	draw_rect(screen, x, ceiling, 1, floor - ceiling, shade);  // draw wall
+	
+	// Draw floor
+	for (int y = floor; y < screen->height; ++y) {
+		int half_screen_height = (screen->height-1) / 2;
+		uint8_t c = (((FLOOR_BRIGHTNESS_MAX - FLOOR_BRIGHTNESS_MIN) * (y - half_screen_height)) / half_screen_height) + FLOOR_BRIGHTNESS_MIN;
+		shade = (Color) {0, c, 0, 255};
+		draw_pixel(screen, x, y, shade);
 	}
 }
 

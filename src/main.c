@@ -1,21 +1,22 @@
-#include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
+#include <stdio.h>
 #include <math.h>
 #include <time.h>
 
 #include <SDL2/SDL.h>
 
+#include "controls.h"
+#include "graphics.h"
+#include "minimap.h"
+#include "player.h"
+#include "debug.h"
+#include "game.h"
+#include "util.h"
 #include "cli.h"
 #include "map.h"
 #include "npc.h"
-#include "util.h"
-#include "game.h"
-#include "debug.h"
-#include "player.h"
-#include "graphics.h"
-#include "controls.h"
 
 int init(SDL_Window **window, SDL_Surface **surface, Screen *scr)
 {
@@ -27,7 +28,7 @@ int init(SDL_Window **window, SDL_Surface **surface, Screen *scr)
 	*window = SDL_CreateWindow("Ray Caster",
 							   SDL_WINDOWPOS_CENTERED,
 							   SDL_WINDOWPOS_CENTERED,
-							   640, 480,
+							   SCREEN_WIDTH, SCREEN_HEIGHT,
 							   SDL_WINDOW_RESIZABLE);
 	if (!(*window)) {
 		printf("Error creating window: %s\n", SDL_GetError());
@@ -64,7 +65,7 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	Player player = {14.7, 5.09, 0.0, 0.01, 0.0021};
+	Player player = {14.7, 5.09, deg_to_rad(0.0), 0.01, 0.0021};
 	Keys   keys = {0};
 	Map    map = map_import("maps/default.txt");
 	Npc    *npcs = NULL;
@@ -82,6 +83,7 @@ int main(int argc, char *argv[])
 
 		screen_clear(&screen);
 		render(&screen, &player, &map, npcs);
+		draw_minimap(&screen, &player, &map, npcs);
 
 		SDL_UpdateWindowSurface(window);
 		cap_framerate(delta);
