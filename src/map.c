@@ -40,10 +40,12 @@ Map map_import(char *mappath)
 	while ((ch = fgetc(mapfile)) != EOF) {
 		switch (ch) {
 		case '\n':
+			// Detect map width from the first line
 			if (isFirstRun) {
 				isFirstRun = false;
 				map.width = currRowLen;
 			} else if (currRowLen != prevRowLen) {
+				// Don't allow different row widths in map
 				printf("Error! Map has rows with different size!\n");
 				exit(EXIT_FAILURE);
 			}
@@ -51,10 +53,13 @@ Map map_import(char *mappath)
 			prevRowLen = currRowLen;
 			currRowLen = 0;
 
+			// Keep track of number of rows in order to detect map height
 			++rowCnt;
 			break;
+		// Ignore windows newline characters
 		case '\r':
 			break;
+		// Insert non-newline characters into map data
 		default:
 			++currRowLen;
 			map.data[mapIndex++] = ch;
@@ -62,11 +67,10 @@ Map map_import(char *mappath)
 		}
 	}
 	++rowCnt; // gets updated on newlines only, didnt increment in the very last line ending with EOF
-	fclose(mapfile);
-
-	map.data[mapIndex] = '\0';
 	map.height = rowCnt;
+	map.data[mapIndex] = '\0';
 
+	fclose(mapfile);
 	return map;
 }
 
