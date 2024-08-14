@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	Player player = {14.7, 5.09, deg_to_rad(0.0), 0.01, 0.0021};
+	Player player = {14.7, 5.09, deg_to_rad(0.0), 0.01, 0.0025};
 	Keys   keys = {0};
 	Map    map = map_import("maps/default.txt");
 	Npc    *npcs = NULL;
