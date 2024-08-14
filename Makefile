@@ -4,7 +4,7 @@ ifeq ($(OS),Windows_NT)
 	DELETE_OBJS = .\tools\clean_objs.bat
 	DELETE_OBJS_DIR = if exist $(OBJ_DIR) rmdir /s /q $(OBJ_DIR)
 	MKDIR_SAFE = mkdir
-	LIBS = -L"C:\libsdl\lib" -lmingw32 -lSDL2main -lSDL2 -mwindows
+	LIBS = -L"C:\libsdl\lib" -lmingw32 -lSDL2main -lSDL2
 	INCLUDES = -I"C:\libsdl\include"
 else
 	NAME = raycaster
